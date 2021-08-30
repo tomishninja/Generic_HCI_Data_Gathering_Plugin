@@ -1,0 +1,175 @@
+﻿using UnityEngine;
+
+[System.Serializable]
+public class DataGatheringBehaviour : MonoBehaviour
+{
+    public enum Frequency
+    {
+        EveryFrame,
+        Never
+    }
+
+    public Frequency frequency = Frequency.EveryFrame;
+
+    public DataItem[] GenericDataItems;
+
+    public UnityData unityDataGatherer;
+
+    private System.Text.StringBuilder output;
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Work out if you should update the frame
+        switch (frequency)
+        {
+            case Frequency.EveryFrame:
+                WriteFrame();
+                break;
+            default:
+                // Do nothing
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Writes a line of data to the output
+    /// </summary>
+    public void WriteFrame()
+    {
+        // get the unity data and write it to the frame
+        output.Append(this.unityDataGatherer.getUnityData());
+
+        for (int index = 0; index < this.GenericDataItems.Length; index++)
+        {
+            // this is a current value
+            var current = this.GenericDataItems[index].container.GetComponent(this.GenericDataItems[index].typeOfScript);
+
+            // get the property out of the object
+            object value = this.GetPropValue(current, this.GenericDataItems[index].nameOfVerible);
+
+            // Get the data to the output
+            WriteValueToOutput(value);
+        }
+
+        // this data has been recorded now move on to the next line
+        output.AppendLine();
+    }
+
+    public void WriteValueToOutput(object value)
+    {
+        if (value.GetType() == typeof(Vector3))
+        {
+             //TODO
+        }
+        else if(value.GetType() == typeof(Vector2))
+        {
+            //TODO
+        }
+        else if (value.GetType() == typeof(Vector4))
+        {
+            //TODO
+        }
+        else if (value.GetType() == typeof(Quaternion))
+        {
+            //TODO
+        }
+        else
+        {
+            // default behaviour (int, float, string )
+            output.Append(value.ToString());
+        }
+        output.Append(",");
+    }
+
+    /// <summary>
+    /// Get a value out of a script
+    /// </summary>
+    /// <param name="src">The game object with a parameter that you want to get</param>
+    /// <param name="propName">The property name of the object you want to get</param>
+    /// <returns>
+    /// The value of the object that you want to get out of this object
+    /// </returns>
+    /// <remarks>
+    /// This may want to have some behaviour 
+    /// </remarks>
+    private object GetPropValue(object src, string propName)
+    {
+        return src.GetType().GetProperty(propName).GetValue(src, null);
+    }
+
+    /// <summary>
+    /// Write the data to a file and move on
+    /// </summary>
+    public void Flush()
+    {
+        //TODO
+    }
+
+    /// <summary>
+    /// Stops the system from recording data
+    /// </summary>
+    public void Pause()
+    {
+        this.frequency = Frequency.Never;
+    }
+
+    /// <summary>
+    /// Change the rate you collect data from the system
+    /// </summary>
+    /// <param name="frequency">
+    /// The speed you want to get data from the system
+    /// </param>
+    public void changeFrequency(Frequency frequency)
+    {
+        this.frequency = frequency;
+    }
+
+}
+
+/// <summary>
+/// all of the data we require to find the objects 
+/// within the unity scene
+/// </summary>
+[System.Serializable]
+public class DataItem {
+    public GameObject container;
+    public string typeOfScript;
+    public string nameOfVerible;
+    //public int index = 0;
+}
+
+/// <summary>
+/// This class will get the main system to write the data 
+/// </summary>
+[System.Serializable]
+public class UnityData
+{
+    public bool deltaTime = false;
+    public bool systemTime = false;
+    public bool frameCount = false;
+
+    public string getUnityData()
+    {
+        string output = "";
+
+        if (deltaTime)
+        {
+            output += Time.deltaTime.ToString() + ",";
+        }
+
+        if (systemTime)
+        {
+            output += Time.time.ToString() + ",";
+        }
+
+        if (frameCount)
+        {
+            output += Time.frameCount.ToString() + ",";
+        }
+
+        return output;
+    }
+}
+
+
