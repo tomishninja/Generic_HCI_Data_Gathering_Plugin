@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public class TimerDatabase : MonoBehaviour
@@ -6,12 +7,17 @@ public class TimerDatabase : MonoBehaviour
     /// <summary>
     /// Where to output the file
     /// </summary>
-    public string fileToOutput;
+    public string OutputDir;
 
     /// <summary>
     /// The name object the place in the file
     /// </summary>
-    public string NameOfDataBase;
+    public string FileName;
+
+    /// <summary>
+    /// the array of items that this object will gather from other scripts
+    /// </summary>
+    public DataItem[] GenericDataItems;
 
     /// <summary>
     /// a array of keys
@@ -37,7 +43,7 @@ public class TimerDatabase : MonoBehaviour
         }
     }
 
-    public void startTimer(string key)
+    public void StartTimer(string key)
     {
         // increment the int by one if it is accepted
         if (database.TryGetValue(key, out TimerDataRows value))
@@ -67,6 +73,41 @@ public class TimerDatabase : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// Write the data to a file and clean the database
+    /// </summary>
+    public void Flush()
+    {
+        // create the output string
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine(TimerDataRows.GetCSVHeader());
+
+        // add the data sourced from a outside file
+        for (int index = 0; index < this.GenericDataItems.Length; index++)
+        {
+            // get the property out of the object
+            object value = this.GenericDataItems[index].GetPropValue();
+
+            // Get the data to the output
+            sb.Append(value);
+            sb.Append(",");
+        }
+
+        // time this data
+        TimerDataRows obj = this.dataRows.Dequeue();
+        while (obj != null)
+        {
+            sb.AppendLine(obj.AsCSVRow());
+            obj = this.dataRows.Dequeue();
+        }
+
+        // write the data out to the data base
+        FileWriterManager.WriteString(sb.ToString(), this.FileName, this.OutputDir);
+
+        // clean out the string buffer
+        sb.Clear();
+    }
 }
 
 
@@ -93,8 +134,58 @@ public class TimerDataRows
         this.TotalTime = this.EndTime - this.StartTime;
     }
 
+    /// <summary>
+    /// Gets all the feilds in this class and returns them as a csv file syle row
+    /// </summary>
+    /// <returns> A Row formated in the style of a csv file</returns>
     public string AsCSVRow()
     {
-        return null; //TODO
+        System.Type t = typeof(TimerDataRows);
+        System.Reflection.FieldInfo[] fields = t.GetFields();
+        StringBuilder csvdata = new StringBuilder();
+        foreach (var f in fields)
+        {
+            if (csvdata.Length > 0)
+                csvdata.Append(",");
+
+            var x = f.GetValue(this);
+
+            if (x != null)
+            {
+                if (x.GetType() != typeof(Vector3))
+                {
+                    csvdata.Append(x.ToString());
+                }
+                else
+                {
+                    Vector3 v = (Vector3)x;
+                    csvdata.Append(v.x);
+                    csvdata.Append(",");
+                    csvdata.Append(v.y);
+                    csvdata.Append(",");
+                    csvdata.Append(v.z);
+                }
+            }
+        }
+
+        // return the csv data
+        return csvdata.ToString();
+    }
+
+    public static string GetCSVHeader()
+    {
+        System.Type t = typeof(TimerDataRows);
+        System.Reflection.FieldInfo[] fields = t.GetFields();
+        StringBuilder csvdata = new StringBuilder();
+        foreach (var f in fields)
+        {
+            if (csvdata.Length > 0)
+                csvdata.Append(",");
+
+            csvdata.Append(f.Name);
+        }
+
+        // return the csv data
+        return csvdata.ToString();
     }
 }
