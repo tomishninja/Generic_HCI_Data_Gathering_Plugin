@@ -8,16 +8,16 @@ public class TrackDistanceOfObject : MonoBehaviour
 
     // Time 
     Vector3 PositionOfTrackedObject;
-
+    //DistanceTrackedObject_Speed
     // The Veribles that are used to be tracked from this
     public float SpeedThisFrame { get; private set; }
     public float DistanceTraveled { get; private set; }
     public float TimeStartedInSeconds { get; private set; }
     public float TimeSinceStarted { get => (Time.time - TimeStartedInSeconds); }
-    public float Speed { get => (TimeSinceStarted / DistanceTraveled); }
+    public float Speed { get => (DistanceTraveled/ TimeSinceStarted); }
 
     // the position at the last time of recording
-    Vector3 LastRecordedPosition;
+    public Vector3 LastRecordedPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -32,7 +32,7 @@ public class TrackDistanceOfObject : MonoBehaviour
     void Update()
     {
         float d = Vector3.Distance(LastRecordedPosition, this.GetPosition());
-        SpeedThisFrame = Time.deltaTime / d;
+        SpeedThisFrame = d / Time.deltaTime;
         DistanceTraveled += d;
     }
 

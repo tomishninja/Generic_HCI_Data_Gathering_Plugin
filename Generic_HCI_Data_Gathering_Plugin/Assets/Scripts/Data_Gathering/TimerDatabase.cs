@@ -79,30 +79,49 @@ public class TimerDatabase : MonoBehaviour
     /// </summary>
     public void Flush()
     {
+        string prepend = "";
+        for (int index = 0; index < this.GenericDataItems.Length; index++)
+        {
+            // get the property out of the object
+            object value = this.GenericDataItems[index].GetName();
+
+            // Get the data to the output
+            prepend += value;
+            prepend += ",";
+        }
+
         // create the output string
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine(TimerDataRows.GetCSVHeader());
+        sb.AppendLine(prepend + TimerDataRows.GetCSVHeader());
+        //Debug.Log("Timer Header: " + TimerDataRows.GetCSVHeader());
 
         // add the data sourced from a outside file
+        prepend = "";
         for (int index = 0; index < this.GenericDataItems.Length; index++)
         {
             // get the property out of the object
             object value = this.GenericDataItems[index].GetPropValue();
 
             // Get the data to the output
-            sb.Append(value);
-            sb.Append(",");
+            prepend += value;
+            prepend += ",";
         }
 
         // time this data
-        TimerDataRows obj = this.dataRows.Dequeue();
+        TimerDataRows obj = null;
+        if (this.dataRows.Count > 0)
+            obj = this.dataRows.Dequeue();
         while (obj != null)
         {
-            sb.AppendLine(obj.AsCSVRow());
-            obj = this.dataRows.Dequeue();
+            sb.AppendLine(prepend + obj.AsCSVRow());
+            if (this.dataRows.Count > 0)
+                obj = this.dataRows.Dequeue();
+            else
+                obj = null;
         }
 
         // write the data out to the data base
+        Debug.Log(sb.ToString());
         FileWriterManager.WriteString(sb.ToString(), this.FileName, this.OutputDir);
 
         // clean out the string buffer
@@ -113,12 +132,12 @@ public class TimerDatabase : MonoBehaviour
 
 public class TimerDataRows
 {
-    string ValueName;
-    float StartTime;
-    float EndTime;
-    float TotalTime;
-    int StartFrame;
-    int EndFrame;
+    public string ValueName;
+    public float StartTime;
+    public float EndTime;
+    public float TotalTime;
+    public int StartFrame;
+    public int EndFrame;
 
     public TimerDataRows(string name)
     {

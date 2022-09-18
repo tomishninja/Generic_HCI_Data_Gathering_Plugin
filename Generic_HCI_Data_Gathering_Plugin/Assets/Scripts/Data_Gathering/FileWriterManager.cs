@@ -10,7 +10,8 @@ public static class FileWriterManager
 
     public static void WriteString(string textContents, string FileName, string FilePath)
     {
-        if (FilePath[FilePath.Length - 1] != '/')
+        
+        if (FilePath.Length > 0 && FilePath[FilePath.Length - 1] != '/')
         {
             FilePath += '/';
         }

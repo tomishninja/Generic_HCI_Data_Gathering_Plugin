@@ -17,14 +17,22 @@ public class DataItem
 
 
     public GameObject container;
+    public string name;
     public string typeOfScript;
     public string nameOfVerible;
     public TypeofData DataType = TypeofData.Feild;
     //public int index = 0;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public string GetName()
     {
-        return this.container.name + "_"+ nameOfVerible;
+        if (name == null || name.Equals("") || name.Length > 0)
+            return this.container.name + "_" + nameOfVerible;
+        else
+            return this.name;
     }
 
     /// <summary>
@@ -42,17 +50,25 @@ public class DataItem
     {
         // this is a current value
         var current = this.container.GetComponent(this.typeOfScript);
-
-        switch (DataType)
+        try
         {
-            case DataItem.TypeofData.Feild:
-                return current.GetType().GetField(this.nameOfVerible).GetValue(current);
-            case DataItem.TypeofData.Property:
-                return current.GetType().GetProperty(this.nameOfVerible).GetValue(current);
-            default:
-                //TODO
-                return null;
+            switch (DataType)
+            {
+                case DataItem.TypeofData.Feild:
+                    return current.GetType().GetField(this.nameOfVerible).GetValue(current, );
+                case DataItem.TypeofData.Property:
+                    return current.GetType().GetProperty(this.nameOfVerible).GetValue(current, null);
+                default:
+                    //TODO
+                    return null;
+            }
         }
+        catch (System.NullReferenceException exception)
+        {
+            Debug.LogError(exception.Message.ToString());
+            Debug.LogError("Name Of Verible" + this.nameOfVerible.ToString());
+        }
+        return null;
 
     }
 }

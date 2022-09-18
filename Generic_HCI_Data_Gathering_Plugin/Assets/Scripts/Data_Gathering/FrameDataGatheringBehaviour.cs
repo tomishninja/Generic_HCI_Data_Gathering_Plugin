@@ -42,6 +42,11 @@ public class FrameDataGatheringBehaviour : MonoBehaviour
     /// </summary>
     private System.Text.StringBuilder output;
 
+    /// <summary>
+    /// Write a file when unity quits
+    /// </summary>
+    [SerializeField] private bool writeFileOnQuit = false;
+
     
     private void Start()
     {
@@ -88,7 +93,15 @@ public class FrameDataGatheringBehaviour : MonoBehaviour
         }
 
         // this data has been recorded now move on to the next line
-        output.AppendLine();
+        output.Append("\r\n");
+    }
+
+    void OnApplicationQuit()
+    {
+        if(writeFileOnQuit)
+            Flush();
+
+        Debug.Log("Quiting");
     }
 
     /// <summary>
@@ -102,19 +115,44 @@ public class FrameDataGatheringBehaviour : MonoBehaviour
         if (value.GetType() == typeof(Vector3))
         {
             Debug.Log("Vector3");
-             //TODO
+            Vector3 other = (Vector3)value;
+            output.Append(other.x);
+            output.Append(",");
+            output.Append(other.y);
+            output.Append(",");
+            output.Append(other.z);
         }
         else if(value.GetType() == typeof(Vector2))
         {
-            //TODO
+            Debug.Log("Vector2");
+            Vector2 other = (Vector2)value;
+            output.Append(other.x);
+            output.Append(",");
+            output.Append(other.y);
         }
         else if (value.GetType() == typeof(Vector4))
         {
-            //TODO
+            Debug.Log("Vector4");
+            Vector4 other = (Vector4)value;
+            output.Append(other.x);
+            output.Append(",");
+            output.Append(other.y);
+            output.Append(",");
+            output.Append(other.z);
+            output.Append(",");
+            output.Append(other.w);
         }
         else if (value.GetType() == typeof(Quaternion))
         {
-            //TODO
+            Debug.Log("Quaternion");
+            Quaternion other = (Quaternion)value;
+            output.Append(other.x);
+            output.Append(",");
+            output.Append(other.y);
+            output.Append(",");
+            output.Append(other.z);
+            output.Append(",");
+            output.Append(other.w);
         }
         else
         {
@@ -169,7 +207,6 @@ public class FrameDataGatheringBehaviour : MonoBehaviour
     {
         this.frequency = frequency;
     }
-
 }
 
 /// <summary>
