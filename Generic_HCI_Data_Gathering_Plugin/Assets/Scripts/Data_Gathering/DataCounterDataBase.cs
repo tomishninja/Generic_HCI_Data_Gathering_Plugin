@@ -5,8 +5,14 @@ using UnityEngine;
 
 public class DataCounterDataBase : MonoBehaviour
 {
+    /// <summary>
+    /// File path for the output files if left blank will default to default file path
+    /// </summary>
     public string OutputDir;
 
+    /// <summary>
+    /// the file name for the file output
+    /// </summary>
     public string FileName;
 
     /// <summary>
@@ -15,7 +21,7 @@ public class DataCounterDataBase : MonoBehaviour
     public DataItem[] GenericDataItems;
 
     /// <summary>
-    /// 
+    /// A list of keys that can be set to be triggered by this database.
     /// </summary>
     [SerializeField]
     string[] dbKeys;
@@ -27,11 +33,7 @@ public class DataCounterDataBase : MonoBehaviour
 
     private void Start()
     {
-        // add all of the new keys to the database so they can be added later
-        for (int index = 0; index < dbKeys.Length; index++)
-        {
-            database.Add(dbKeys[index], 0);
-        }
+        InitalizeUpDataBase();
     }
 
     /// <summary>
@@ -49,6 +51,18 @@ public class DataCounterDataBase : MonoBehaviour
         }
     }
 
+    private void InitalizeUpDataBase()
+    {
+        // add all of the new keys to the database so they can be added later
+        for (int index = 0; index < dbKeys.Length; index++)
+        {
+            database.Add(dbKeys[index], 0);
+        }
+    }
+
+    /// <summary>
+    /// Write the file out to a repository and clean out the database of all of it's values
+    /// </summary>
     public void Flush()
     {
         // create the output string
@@ -56,24 +70,20 @@ public class DataCounterDataBase : MonoBehaviour
         sb.AppendLine(this.GetCSVHeader());
 
         // add the data sourced from a outside file
+        string prepend = "";
         for (int index = 0; index < this.GenericDataItems.Length; index++)
         {
             // get the property out of the object
             object value = this.GenericDataItems[index].GetPropValue();
 
             // Get the data to the output
-            sb.Append(value);
-            sb.Append(",");
+            prepend += value + ",";
         }
-
-        // the above will be writen now to each line as a preamble so save it and begin to use the sb else where
-        string preamble = sb.ToString();
-        sb.Clear();
 
         // add in all of the rows
         for (int index = 0; index < dbKeys.Length; index++)
         {
-            sb.Append(preamble + dbKeys[index] + "," + database[dbKeys[index]]);
+            sb.AppendLine(prepend + dbKeys[index] + "," + database[dbKeys[index]]);
         }
 
         // write the data out to the data base
@@ -81,6 +91,10 @@ public class DataCounterDataBase : MonoBehaviour
 
         // clean out the string buffer
         sb.Clear();
+
+        // Set up a new counting database
+        database = new Dictionary<string, int>();
+        this.InitalizeUpDataBase();
     }
 
     private string GetCSVHeader()

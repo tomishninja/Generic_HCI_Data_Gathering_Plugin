@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311786, g: 0.38073632, b: 0.3587248, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -173,7 +173,7 @@ MonoBehaviour:
   - container: {fileID: 594935954}
     name: 
     typeOfScript: StudyDetails
-    nameOfVerible: userID
+    nameOfVariable: userID
     DataType: 0
   dbKeys:
   - TimeBetweenMovement
@@ -189,7 +189,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &457031603
 GameObject:
@@ -321,37 +321,37 @@ MonoBehaviour:
   - container: {fileID: 457031603}
     name: 
     typeOfScript: TrackDistanceOfObject
-    nameOfVerible: SpeedThisFrame
+    nameOfVariable: SpeedThisFrame
     DataType: 1
   - container: {fileID: 457031603}
     name: 
     typeOfScript: TrackDistanceOfObject
-    nameOfVerible: TimeStartedInSeconds
+    nameOfVariable: DistanceTraveled
     DataType: 1
   - container: {fileID: 457031603}
     name: 
     typeOfScript: TrackDistanceOfObject
-    nameOfVerible: TimeSinceStarted
+    nameOfVariable: TimeStartedInSeconds
     DataType: 1
   - container: {fileID: 457031603}
     name: 
     typeOfScript: TrackDistanceOfObject
-    nameOfVerible: Speed
+    nameOfVariable: TimeSinceStarted
     DataType: 1
   - container: {fileID: 457031603}
     name: 
     typeOfScript: TrackDistanceOfObject
-    nameOfVerible: DistanceTraveled
+    nameOfVariable: Speed
     DataType: 1
   - container: {fileID: 457031603}
     name: PosX,PosY,PosZ
     typeOfScript: TrackDistanceOfObject
-    nameOfVerible: LastRecordedPosition
+    nameOfVariable: LastRecordedPosition
     DataType: 0
   - container: {fileID: 594935954}
     name: 
     typeOfScript: StudyDetails
-    nameOfVerible: userID
+    nameOfVariable: userID
     DataType: 0
   unityDataGatherer:
     deltaTime: 1
@@ -400,7 +400,76 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1283522868
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1283522871}
+  - component: {fileID: 1283522870}
+  - component: {fileID: 1283522869}
+  m_Layer: 0
+  m_Name: Counter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1283522869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1283522868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a06ea4b29fb2656468c4473d32c1d6a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataBase: {fileID: 1283522870}
+--- !u!114 &1283522870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1283522868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2484d96f0ef573c4a8cd04a9251febc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OutputDir: 
+  FileName: Counter.csv
+  GenericDataItems:
+  - container: {fileID: 594935954}
+    name: 
+    typeOfScript: StudyDetails
+    nameOfVariable: userID
+    DataType: 0
+  dbKeys:
+  - LeftClick
+  - CenterClick
+  - RightClick
+--- !u!4 &1283522871
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1283522868}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2079127637
 GameObject:
@@ -437,8 +506,8 @@ Camera:
   m_GameObject: {fileID: 2079127637}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

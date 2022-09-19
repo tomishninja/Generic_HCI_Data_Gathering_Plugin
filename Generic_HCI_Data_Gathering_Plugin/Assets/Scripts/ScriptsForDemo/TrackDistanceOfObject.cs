@@ -5,9 +5,7 @@ using UnityEngine;
 public class TrackDistanceOfObject : MonoBehaviour
 {
     public TransformToUse positionToUse = TransformToUse.local;
-
-    // Time 
-    Vector3 PositionOfTrackedObject;
+    
     //DistanceTrackedObject_Speed
     // The Veribles that are used to be tracked from this
     public float SpeedThisFrame { get; private set; }
@@ -34,6 +32,7 @@ public class TrackDistanceOfObject : MonoBehaviour
         float d = Vector3.Distance(LastRecordedPosition, this.GetPosition());
         SpeedThisFrame = d / Time.deltaTime;
         DistanceTraveled += d;
+        LastRecordedPosition = this.GetPosition();
     }
 
     private Vector3 GetPosition() 

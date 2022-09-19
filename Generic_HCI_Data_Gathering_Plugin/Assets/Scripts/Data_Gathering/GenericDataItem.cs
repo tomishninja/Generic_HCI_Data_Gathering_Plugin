@@ -8,6 +8,10 @@
 [System.Serializable]
 public class DataItem
 {
+
+    /// <summary>
+    /// Types of data that have are working in this system.
+    /// </summary>
     public enum TypeofData
     {
         Feild,
@@ -15,22 +19,40 @@ public class DataItem
         //Method,
     }
 
-
+    /// <summary>
+    /// The game object containing the script that contains this data.
+    /// </summary>
     public GameObject container;
-    public string name;
-    public string typeOfScript;
-    public string nameOfVerible;
-    public TypeofData DataType = TypeofData.Feild;
-    //public int index = 0;
 
     /// <summary>
-    /// 
+    /// This allows data to be saved using a overrinding name.
+    /// If left blank it will default to the name of the varible
+    /// </summary>
+    public string name;
+
+    /// <summary>
+    /// The name of the script that this value comes from
+    /// </summary>
+    public string typeOfScript;
+
+    /// <summary>
+    /// The name of the variable that this script comes from
+    /// </summary>
+    public string nameOfVariable;
+
+    /// <summary>
+    /// What is the 
+    /// </summary>
+    public TypeofData DataType = TypeofData.Feild;
+
+    /// <summary>
+    /// Returns the correct Name granted to the object
     /// </summary>
     /// <returns></returns>
     public string GetName()
     {
-        if (name == null || name.Equals("") || name.Length > 0)
-            return this.container.name + "_" + nameOfVerible;
+        if (name == null || name.Trim().Equals("") || name.Trim().Length < 1)
+            return this.container.name + "_" + nameOfVariable;
         else
             return this.name;
     }
@@ -55,9 +77,9 @@ public class DataItem
             switch (DataType)
             {
                 case DataItem.TypeofData.Feild:
-                    return current.GetType().GetField(this.nameOfVerible).GetValue(current, );
+                    return current.GetType().GetField(this.nameOfVariable).GetValue(current);
                 case DataItem.TypeofData.Property:
-                    return current.GetType().GetProperty(this.nameOfVerible).GetValue(current, null);
+                    return current.GetType().GetProperty(this.nameOfVariable).GetValue(current, null);
                 default:
                     //TODO
                     return null;
@@ -66,9 +88,8 @@ public class DataItem
         catch (System.NullReferenceException exception)
         {
             Debug.LogError(exception.Message.ToString());
-            Debug.LogError("Name Of Verible" + this.nameOfVerible.ToString());
+            Debug.LogError("Name Of Verible" + this.nameOfVariable.ToString());
         }
         return null;
-
     }
 }
