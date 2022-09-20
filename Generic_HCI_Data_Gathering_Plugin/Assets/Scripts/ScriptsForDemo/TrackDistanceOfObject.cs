@@ -15,7 +15,7 @@ public class TrackDistanceOfObject : MonoBehaviour
     public float Speed { get => (DistanceTraveled/ TimeSinceStarted); }
 
     // the position at the last time of recording
-    public Vector3 LastRecordedPosition;
+    public Vector3 LastRecordedPosition = Vector3.zero;
 
     // Start is called before the first frame update
     void Start()

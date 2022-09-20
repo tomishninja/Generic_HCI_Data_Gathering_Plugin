@@ -121,7 +121,6 @@ public class TimerDatabase : MonoBehaviour
         }
 
         // write the data out to the data base
-        Debug.Log(sb.ToString());
         FileWriterManager.WriteString(sb.ToString(), this.FileName, this.OutputDir);
 
         // clean out the string buffer
@@ -171,19 +170,7 @@ public class TimerDataRows
 
             if (x != null)
             {
-                if (x.GetType() != typeof(Vector3))
-                {
-                    csvdata.Append(x.ToString());
-                }
-                else
-                {
-                    Vector3 v = (Vector3)x;
-                    csvdata.Append(v.x);
-                    csvdata.Append(",");
-                    csvdata.Append(v.y);
-                    csvdata.Append(",");
-                    csvdata.Append(v.z);
-                }
+                csvdata.Append(x.ToString());
             }
         }
 

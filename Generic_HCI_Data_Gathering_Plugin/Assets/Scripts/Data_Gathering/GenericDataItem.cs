@@ -8,6 +8,10 @@
 [System.Serializable]
 public class DataItem
 {
+    /// <summary>
+    /// An array of various post ends for the get name method
+    /// </summary>
+    private static string[] postEnds = { "_x", "_y", "_z", "_w" };
 
     /// <summary>
     /// Types of data that have are working in this system.
@@ -50,6 +54,64 @@ public class DataItem
     /// </summary>
     /// <returns></returns>
     public string GetName()
+    {
+        // Get the subject
+        object subject = null;
+        try
+        {
+            subject = this.GetPropValue();
+        }
+        catch (System.NullReferenceException ex)
+        {
+            Debug.LogError(this._GetName());
+            return _GetName();
+        }
+        
+
+        // Apply the correct post ends for the various feilds
+        if (subject.GetType() == typeof(Vector2))
+        {
+            string output = "";
+            string name = output += this._GetName();
+            for (int i = 0; i < 2; i++)
+            {
+                output += name + postEnds[i];
+                if (i != 1)
+                    output += ",";
+            }
+            return output;
+        }
+        else if (subject.GetType() == typeof(Vector3))
+        {
+            string output = "";
+            string name = output += this._GetName();
+            for (int i = 0; i < 3; i++)
+            {
+                output += name + postEnds[i];
+                if (i != 2)
+                    output += ",";
+            }
+            return output;
+        }
+        else if (subject.GetType() == typeof(Vector4) || subject.GetType() == typeof(Quaternion))
+        {
+            string output = "";
+            string name = output += this._GetName();
+            for (int i = 0; i < 4; i++)
+            {
+                output += name + postEnds[i];
+                if (i != 3)
+                    output += ",";
+            }
+            return output;
+        }
+        else
+        {
+            return this._GetName();
+        }
+    }
+
+    private string _GetName()
     {
         if (name == null || name.Trim().Equals("") || name.Trim().Length < 1)
             return this.container.name + "_" + nameOfVariable;

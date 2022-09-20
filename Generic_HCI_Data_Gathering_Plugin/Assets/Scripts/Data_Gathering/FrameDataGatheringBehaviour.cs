@@ -58,6 +58,7 @@ public class FrameDataGatheringBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         // Work out if you should update the frame
         switch (frequency)
         {

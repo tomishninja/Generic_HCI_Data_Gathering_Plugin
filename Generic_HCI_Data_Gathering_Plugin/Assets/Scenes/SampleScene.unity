@@ -344,7 +344,7 @@ MonoBehaviour:
     nameOfVariable: Speed
     DataType: 1
   - container: {fileID: 457031603}
-    name: PosX,PosY,PosZ
+    name: 
     typeOfScript: TrackDistanceOfObject
     nameOfVariable: LastRecordedPosition
     DataType: 0
