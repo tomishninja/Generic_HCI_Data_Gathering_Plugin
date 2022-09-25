@@ -47,6 +47,8 @@ public class FrameDataGatheringBehaviour : MonoBehaviour
     /// </summary>
     [SerializeField] private bool writeFileOnQuit = false;
 
+    public bool pause = false;
+
     
     private void Start()
     {
@@ -58,12 +60,12 @@ public class FrameDataGatheringBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         // Work out if you should update the frame
         switch (frequency)
         {
             case Frequency.EveryFrame:
-                WriteFrame();
+                if (!pause)
+                    WriteFrame();
                 break;
             default:
                 // Do nothing

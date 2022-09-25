@@ -49,6 +49,11 @@ public class DataCounterDataBase : MonoBehaviour
         {
             database[key]++;
         }
+        else
+        {
+            // if it dosn't exist add it and 
+            database[key] = 1;
+        }
     }
 
     private void InitalizeUpDataBase()
