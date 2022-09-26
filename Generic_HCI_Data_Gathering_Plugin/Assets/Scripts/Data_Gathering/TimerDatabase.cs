@@ -74,11 +74,31 @@ public class TimerDatabase : MonoBehaviour
         }
     }
 
+    public void StopAll()
+    {
+        foreach (KeyValuePair<string, TimerDataRows> entry in database)
+        {
+            // only start the timer if it hasn't already started
+            if (entry.Value != null)
+            {
+                //if this item hadent ended then add it to the queue
+                if (entry.Value.End())
+                {
+                    // send it to the stack
+                    dataRows.Enqueue(entry.Value);
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// Write the data to a file and clean the database
     /// </summary>
     public void Flush()
     {
+        // Just incase there was something left stop everything
+        this.StopAll();
+
         string prepend = "";
         for (int index = 0; index < this.GenericDataItems.Length; index++)
         {
@@ -125,6 +145,8 @@ public class TimerDatabase : MonoBehaviour
 
         // clean out the string buffer
         sb.Clear();
+        // clean out the database for next time
+        database = new Dictionary<string, TimerDataRows>();
     }
 }
 
@@ -137,6 +159,7 @@ public class TimerDataRows
     public float TotalTime;
     public int StartFrame;
     public int EndFrame;
+    private bool hasEnded = false;
 
     public TimerDataRows(string name)
     {
@@ -145,11 +168,17 @@ public class TimerDataRows
         this.StartFrame = Time.frameCount;
     }
 
-    public void End()
+    public bool End()
     {
-        this.EndTime = Time.time;
-        this.EndFrame = Time.frameCount;
-        this.TotalTime = this.EndTime - this.StartTime;
+        if (!hasEnded)
+        {
+            this.EndTime = Time.time;
+            this.EndFrame = Time.frameCount;
+            this.TotalTime = this.EndTime - this.StartTime;
+            hasEnded = true;
+            return true;
+        }
+        return false;
     }
 
     /// <summary>
